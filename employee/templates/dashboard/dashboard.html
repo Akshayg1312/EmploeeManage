@@ -1,0 +1,265 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% load static %}
+{% if messages %}
+{% for message in messages %}
+  <div class=" text-center sssalert {% if message.tags %} alert-{{ message.tags }}{% endif %}"><b class="text-center">{{ message|safe }}</b></div>
+{% endfor %}
+{% endif %}
+
+
+<!--  Start Add Employee Modal -->
+<div class="modal fade" id="AddEmployee" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <form method="post" action="{% url 'addEmployee' %}">
+    {% csrf_token %}
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Add Employee</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-2">
+          <i class="fas fa-user prefix grey-text"></i>
+          <input type="text" id="email" class="form-control validate" name =email>
+          <label data-error="wrong" data-success="right" for="form34">Employee Email</label>
+        </div>
+
+        <div class="md-form mb-2">
+          <i class="fas fa-envelope prefix grey-text"></i>
+          <input type="text" id="form29" class="form-control validate" name="firstname">
+          <label data-error="wrong" data-success="right" for="form29">First Name</label>
+        </div>
+
+        <div class="md-form mb-2">
+          <i class="fas fa-tag prefix grey-text"></i>
+          <input type="text" id="form32" class="form-control validate" name="lastname">
+          <label data-error="wrong" data-success="right" for="form32">Last Name </label>
+        </div>
+
+        <div class="md-form mb-2">
+          <i class="fas fa-tag prefix grey-text"></i>
+          <input type="date" id="form32" class="form-control validate" name="dob">
+          <label data-error="wrong" data-success="right" for="form32">Date Of Birth </label>
+        </div>
+        <div class="md-form mb-2">
+          <i class="fas fa-tag prefix grey-text"></i>
+          <input type="text" id="form32" class="form-control validate" name="mobno">
+          <label data-error="wrong" data-success="right" for="form32">Mobile No </label>
+        </div>
+
+        <div class="md-form">
+          <i class="fas fa-pencil prefix grey-text"></i>
+          <input type="text" id="form32" class="form-control validate" name="address">
+          <label data-error="wrong" data-success="right" for="form8">Address</label>
+        </div>
+
+        <div class="md-form">
+          <i class="fas fa-pencil prefix grey-text"></i>
+          <input type="text" id="form32" class="form-control validate" name="city">
+          <label data-error="wrong" data-success="right" for="form8">City</label>
+        </div>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button class="btn btn-success" type="submit">Send <i class="fas fa-paper-plane-o ml-1"></i></button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+<div class="text-center mt-2">
+  <a href="" class="btn btn-default btn-rounded mb-4 float-right" data-toggle="modal" data-target="#AddEmployee">Add Employee</a>
+</div>
+<!-- end Add Employee Modal  -->
+
+
+
+
+<table class="table mt-5">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Sr No.</th>
+        <th scope="col">Email</th>
+        <th scope="col">Firstname</th>
+        <th scope="col">Lastname</th>
+        <th scope="col">Address</th>
+        <th scope="col">Date Of Birth</th>
+        <th scope="col">Mobile no</th>
+        <th scope="col">City</th>
+        <th scope="col">Action</th>  
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in emp %}
+      <tr>
+        <th scope="row"> {{ forloop.counter }} </th>
+        <td id="{{i.id}}_email">{{i.email}}</td>
+        <td id="{{i.id}}_firstname">{{i.firstname}}</td>
+        <td id="{{i.id}}_lastname">{{ i.lastname }}</td>
+        <td id="{{i.id}}_address">{{ i.address }}</td>
+        <td id="{{i.id}}_dob">{{ i.dob }}</td>
+        <td id="{{i.id}}_mobile_no">{{ i.mobile_no }}</td>
+        <td id="{{i.id}}_city">{{ i.city }}</td>
+        <td>
+         
+         <!-- <a href=""> <img src="{% static 'css/Edit.png' %}" width="40px;" height="40px;"></a> -->
+        <a href="" class="" onclick="submit('{{i.id}}')" data-toggle="modal" data-target="#update"><img src="{% static 'css/Edit.png' %}" width="40px;" height="40px;"></a>
+          <a href="" onclick="deleterecord('{{i.id}}')"> <img src="{% static 'css/delete.png' %}" width="40px;" height="40px;"></a>
+         
+          
+      </tr>
+
+
+
+      <!-- Start Update Employee Modal  -->
+
+
+<div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+<form method="post" action="{% url 'updateEmployee' %}" >
+  {% csrf_token %}
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header text-center">
+      <h4 class="modal-title w-100 font-weight-bold">Update Employee</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body mx-3">
+      <div class="md-form mb-2">
+        <i class="fas fa-user prefix grey-text"></i>
+        <input type="text" id="updateid" class="form-control validate" name ='id' hidden>
+        <input type="text" id="updateemail" class="form-control validate" name ='email'>
+        <label data-error="wrong" data-success="right" for="form34">Employee Email</label>
+      </div>
+
+      <div class="md-form mb-2">
+        <i class="fas fa-envelope prefix grey-text"></i>
+        <input type="text" id="updatefirstname" class="form-control validate" name="firstname">
+        <label data-error="wrong" data-success="right" for="updatefirstname">First Name</label>
+      </div>
+
+      <div class="md-form mb-2">
+        <i class="fas fa-tag prefix grey-text"></i>
+        <input type="text" id="updatelastname" class="form-control validate" name="lastname">
+        <label data-error="wrong" data-success="right" for="updatelastname">Last Name </label>
+      </div>
+
+      <div class="md-form mb-2">
+        <i class="fas fa-tag prefix grey-text"></i>
+        <input type="date" id="updatedob" class="form-control validate" name="dob">
+        <label data-error="wrong" data-success="right" for="updatedob">Date Of Birth </label>
+      </div>
+      <div class="md-form mb-2">
+        <i class="fas fa-tag prefix grey-text"></i>
+        <input type="text" id="updatemobno" class="form-control validate" name="mobno">
+        <label data-error="wrong" data-success="right" for="updatemobno">Mobile No </label>
+      </div>
+
+      <div class="md-form">
+        <i class="fas fa-pencil prefix grey-text"></i>
+        <input type="text" id="updateaddress" class="form-control validate" name="address">
+        <label data-error="wrong" data-success="right" for="updateaddress">Address</label>
+      </div>
+
+      <div class="md-form">
+        <i class="fas fa-pencil prefix grey-text"></i>
+        <input type="text" id="updatecity" class="form-control validate" name="city">
+        <label data-error="wrong" data-success="right" for="updatecity">City</label>
+      </div>
+
+    </div>
+    <div class="modal-footer d-flex justify-content-center">
+      <button class="btn btn-success" type="submit">Send <i class="fas fa-paper-plane-o ml-1"></i></button>
+    </div>
+  </div>
+</div>
+</form>
+</div>
+<!-- End Update Emmplooyee Modal -->
+      {% endfor %}
+      
+    </tbody>
+  </table>
+
+
+  <script type="text/javascript">
+  
+    function submit(id){
+      var email = $('#'+id+'_email').text()
+      var firstname = $('#'+id+'_firstname').text()
+      var lastname = $('#'+id+'_lastname').text()
+      var address = $('#'+id+'_address').text()
+      var dob = $('#'+id+'_dob').text()
+      var mobile_no = $('#'+id+'_mobile_no').text()
+      var city = $('#'+id+'_city').text()
+
+      
+      $('#updateemail').val(email)
+      $('#updatefirstname').val(firstname)
+      $('#updatelastname').val(lastname)
+      $('#updateaddress').val(address)
+      
+      $('#updatemobno').val(mobile_no)
+      $('#updatecity').val(city)
+      $('#updateid').val(id)
+      
+      var date =new Date(dob)
+      
+      year= date.getFullYear()
+      month= date.getMonth()+1
+      tdate = date.getDate()
+      console.log(year)
+      console.log(month)
+      console.log(tdate)
+      
+      MyDateString = date.getFullYear() + '-'
+             + ('0' + (date.getMonth()+1)).slice(-2) + '-'
+             + ('0' + date.getDate()).slice(-2);
+      // datepattern = year+ '-'+ month + '-' +  tdate
+      // console.log(datepattern)
+      $('#updatedob').val(MyDateString)
+      
+
+
+      
+      
+    }
+    
+</script>
+
+<script>
+  function deleterecord(id){
+   
+      if (confirm('Are you sure you want to save this thing into the database?')) {
+        
+        $.ajax({
+             type:'GET',
+             url:'{% url 'deleteRecord' %}',
+             data:{
+                id:id
+             },
+             success: function(data){
+                  
+                  console.log(data)
+                },
+                 error: function(data){
+                 console.log(data)
+                 alert(data)
+                 }
+             
+            });
+            
+    } else {
+     
+      console.log('Thing was not saved to the database.');
+    }
+    }
+</script>
+{% endblock %}
